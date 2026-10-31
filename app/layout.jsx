@@ -14,6 +14,13 @@ export const metadata = {
   description: "Personal portfolio of Feril Ferdian",
 };
 
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f6f2e9" },
+    { media: "(prefers-color-scheme: dark)", color: "#15110c" },
+  ],
+};
+
 // Set the theme before first paint to avoid a flash of the wrong theme.
 const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}document.documentElement.dataset.theme=t;}catch(e){document.documentElement.dataset.theme="dark";}})();`;
 const MOTION_SCRIPT = `(function(){try{var m=localStorage.getItem("portfolio-motion");if(m!=="full"&&m!=="reduced"){m=window.matchMedia("(prefers-reduced-motion: reduce)").matches?"reduced":"full";}document.documentElement.dataset.motion=m;}catch(e){document.documentElement.dataset.motion="full";}})();`;

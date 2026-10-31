@@ -16,7 +16,7 @@ export const dict = {
       contact: "Kontak",
     },
     hero: {
-      viewWork: "Lihat karya pilihan",
+      viewWork: "Lihat proyek",
       getInTouch: "Hubungi saya",
       scroll: "Gulir",
     },
@@ -33,7 +33,7 @@ export const dict = {
       label: "(Layanan)",
       meta: "Kapabilitas",
       title: "Yang bisa saya kerjakan",
-      intro: "Saya membantu mengubah ide yang kompleks menjadi produk digital yang jelas, matang, dan siap digunakan.",
+      intro: "Saya membantu mengubah kebutuhan yang rumit menjadi aplikasi web yang jelas, stabil, dan siap dipakai.",
       cta: "Mulai percakapan",
       scopeLabel: "Cakupan",
       empty: "Daftar layanan akan segera hadir.",
@@ -67,9 +67,9 @@ export const dict = {
       closeMenu: "Tutup menu",
     },
     meta: {
-      homeTitle: "Feril Ferdian \u2014 Desainer & Pengembang Produk",
+      homeTitle: "Feril Ferdian \u2014 Full Stack Web Developer",
       homeDesc:
-        "Portofolio pribadi Feril Ferdian \u2014 merancang produk digital yang matang dengan kejernihan dan ketelitian.",
+        "Portofolio Feril Ferdian, full stack web developer dari Aceh \u2014 membangun aplikasi web dengan React, Node.js, dan MongoDB.",
       blogTitle: "Jurnal \u2014 Feril Ferdian",
       blogDesc: "Tulisan & catatan oleh Feril Ferdian.",
       postFallback: "Tulisan \u2014 Feril Ferdian",
@@ -86,7 +86,7 @@ export const dict = {
       contact: "Contact",
     },
     hero: {
-      viewWork: "View selected work",
+      viewWork: "View projects",
       getInTouch: "Get in touch",
       scroll: "Scroll",
     },
@@ -103,7 +103,7 @@ export const dict = {
       label: "(Services)",
       meta: "Capabilities",
       title: "What I can help with",
-      intro: "I help turn complex ideas into clear, considered digital products that are ready to use.",
+      intro: "I help turn complicated requirements into web apps that are clear, stable, and ready to use.",
       cta: "Start a conversation",
       scopeLabel: "Scope",
       empty: "Service details are coming soon.",
@@ -134,9 +134,9 @@ export const dict = {
       closeMenu: "Close menu",
     },
     meta: {
-      homeTitle: "Feril Ferdian \u2014 Product Designer & Developer",
+      homeTitle: "Feril Ferdian \u2014 Full Stack Web Developer",
       homeDesc:
-        "Personal portfolio of Feril Ferdian \u2014 designing thoughtful digital products with clarity and craft.",
+        "Portfolio of Feril Ferdian, a full stack web developer from Aceh \u2014 building web apps with React, Node.js, and MongoDB.",
       blogTitle: "Journal \u2014 Feril Ferdian",
       blogDesc: "Writing & notes by Feril Ferdian.",
       postFallback: "Post \u2014 Feril Ferdian",

@@ -18,10 +18,10 @@ const shared = {
 };
 
 const en = {
-  role: "Product Designer & Developer",
-  roles: ["Product Designer", "Frontend Developer", "Creative Technologist"],
+  role: "Full Stack Web Developer",
+  roles: ["Full Stack Developer", "Frontend Developer", "Backend Developer"],
   // Wrap words in * * to highlight them in the accent color.
-  headline: "Designing *thoughtful* digital products with *clarity* and craft.",
+  headline: "Building web apps that are *clear* to use and *solid* to run.",
   availability: "Available for new work",
   keywords: [
     "UI / UX",
@@ -134,10 +134,10 @@ const en = {
 };
 
 const id = {
-  role: "Desainer & Pengembang Produk",
-  roles: ["Desainer Produk", "Pengembang Frontend", "Teknolog Kreatif"],
+  role: "Full Stack Web Developer",
+  roles: ["Full Stack Developer", "Frontend Developer", "Backend Developer"],
   headline:
-    "Merancang produk digital yang *matang* dengan *kejernihan* dan ketelitian.",
+    "Membangun aplikasi web yang *jelas* dipakai dan *andal* dijalankan.",
   availability: "Terbuka untuk proyek baru",
   keywords: [
     "UI / UX",

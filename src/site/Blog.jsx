@@ -32,7 +32,7 @@ export default function Blog({ posts: initial = null }) {
     if (posts?.length) finishSharedTextTransitionToList()
   }, [posts])
 
-  const eyebrow = locale === "id" ? "Catatan tentang desain, kode, dan proses" : "Notes on design, code, and process"
+  const eyebrow = locale === "id" ? "Catatan tentang kode, proyek, dan proses" : "Notes on code, projects, and process"
   const intro = locale === "id"
     ? "Esai pendek, catatan kerja, dan hal-hal yang saya pelajari ketika mengubah ide menjadi produk digital."
     : "Short essays, working notes, and lessons learned while turning ideas into digital products."
@@ -57,7 +57,7 @@ export default function Blog({ posts: initial = null }) {
           {posts === null ? (
             <p className="blog-empty">{t.blog.loading}</p>
           ) : posts.length === 0 ? (
-            <div className="journal-empty"><span>00</span><p>{t.blog.empty}</p></div>
+            <div className="journal-empty"><p>{t.blog.empty}</p></div>
           ) : (
             <ol className="journal-list">
               {posts.map((post, index) => (

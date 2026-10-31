@@ -1,6 +1,7 @@
 "use client"
 import { useUI, useLocale } from "../i18n/context.jsx"
 import { Link } from "../lib/router.jsx"
+import HeroFigure from "./HeroFigure.jsx"
 
 function formatDate(value, locale) {
   if (!value) return ""
@@ -48,10 +49,12 @@ export default function Home({ content, posts = [] }) {
   const t = useUI()
   const locale = useLocale()
   const copy = locale === "id"
-    ? { intro: "Desain produk, sistem antarmuka, dan creative development.", profile: "Profil", selected: "Pilihan karya", capabilities: "Kapabilitas", timeline: "Linimasa", notes: "Catatan terbaru", journalIntro: "Pemikiran tentang desain, kode, dan proses yang membentuk karya di balik layar.", allWriting: "Lihat semua tulisan", start: "Mulai percakapan", index: "Indeks praktik" }
-    : { intro: "Product design, interface systems, and creative development.", profile: "Profile", selected: "Selected work", capabilities: "Capabilities", timeline: "Timeline", notes: "Latest notes", journalIntro: "Thoughts on design, code, and the process shaping the work behind the scenes.", allWriting: "View all writing", start: "Start a conversation", index: "Practice index" }
+    ? { intro: "Membangun aplikasi web utuh, dari antarmuka sampai server.", profile: "Profil", selected: "Proyek", capabilities: "Teknologi", timeline: "Linimasa", notes: "Catatan terbaru", journalIntro: "Catatan tentang kode, proyek, dan proses di balik aplikasi yang saya bangun.", allWriting: "Lihat semua tulisan", start: "Mulai percakapan", index: "Fokus" }
+    : { intro: "Building complete web apps, from interface to server.", profile: "Profile", selected: "Projects", capabilities: "Tech stack", timeline: "Timeline", notes: "Latest notes", journalIntro: "Notes on code, projects, and the process behind the apps I build.", allWriting: "View all writing", start: "Start a conversation", index: "Focus" }
   const { profile, keywords, about, skills, services, projects, experience } = content
   const [featuredPost, ...secondaryPosts] = posts
+  // Links still pointing at a placeholder profile stay hidden until they're real.
+  const socials = (profile?.socials || []).filter((social) => social.href && !/placeholder/i.test(social.href))
 
   return (
     <main>
@@ -61,14 +64,17 @@ export default function Home({ content, posts = [] }) {
             <span className="hero-eyebrow">{profile?.role}</span>
             <span className="hero-loc">{profile?.location} / {new Date().getFullYear()}</span>
           </div>
-          <div className="hero-copy">
-            <span className="hero-kicker" data-enter>{copy.intro}</span>
-            <HeroTitle headline={profile?.headline} />
+          <div className="hero-main">
+            <div className="hero-copy">
+              <span className="hero-kicker" data-enter>{copy.intro}</span>
+              <HeroTitle headline={profile?.headline} />
+            </div>
+            <HeroFigure />
           </div>
           <div className="hero-bottom" data-enter>
             <p className="hero-intro">{about?.paragraphs?.[0]}</p>
             <div className="hero-actions">
-              <a href="#work" className="text-link" data-hover onClick={(event) => { event.preventDefault(); document.getElementById("work")?.scrollIntoView({ behavior: "smooth" }) }}>{t.hero.viewWork}<span>↓</span></a>
+              <a href="#work" className="text-link text-link--primary" data-hover onClick={(event) => { event.preventDefault(); document.getElementById("work")?.scrollIntoView({ behavior: "smooth" }) }}>{t.hero.viewWork}<span>↓</span></a>
               <a href={`mailto:${profile?.email || ""}`} className="text-link" data-hover>{t.hero.getInTouch}<span>↗</span></a>
             </div>
           </div>
@@ -78,22 +84,22 @@ export default function Home({ content, posts = [] }) {
       <div className="practice-index" aria-label={copy.index}>
         <div className="container practice-index-inner">
           <span>{copy.index}</span>
-          <div>{(keywords || []).slice(0, 6).map((item, index) => <span key={item}><i>{String(index + 1).padStart(2, "0")}</i>{item}</span>)}</div>
+          <div>{(keywords || []).slice(0, 6).map((item) => <span key={item}>{item}</span>)}</div>
         </div>
       </div>
 
       <section id="about" className="section about">
         <div className="container">
-          <div className="section-meta"><span>{t.sections.about}</span><span>02 / {copy.profile}</span></div>
+          <div className="section-meta"><span>{t.sections.about}</span><span>{copy.profile}</span></div>
           <div className="about-layout">
             <p className="about-statement" data-reveal>{about?.statement}</p>
             <div className="about-copy" data-reveal>{(about?.paragraphs || []).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
           </div>
           <div className="skills" data-reveal>
             <span className="skills-label">{copy.capabilities}</span>
-            {(skills || []).map((skill, index) => (
+            {(skills || []).map((skill) => (
               <div className="skill-group" key={skill.group}>
-                <h3><span>{String(index + 1).padStart(2, "0")}</span>{skill.group}</h3>
+                <h3>{skill.group}</h3>
                 <p>{(skill.items || []).join(" · ")}</p>
               </div>
             ))}
@@ -103,7 +109,7 @@ export default function Home({ content, posts = [] }) {
 
       <section id="services" className="section capabilities">
         <div className="container">
-          <div className="section-meta"><span>{t.services.label}</span><span>03 / {t.services.meta}</span></div>
+          <div className="section-meta"><span>{t.services.label}</span><span>{t.services.meta}</span></div>
           <div className="capability-layout">
             <div className="capability-intro">
               <h2 data-split>{t.services.title}</h2>
@@ -147,7 +153,7 @@ export default function Home({ content, posts = [] }) {
 
       <section id="work" className="section work">
         <div className="container">
-          <div className="section-meta"><span>{t.sections.work}</span><span>04 / {copy.selected}</span></div>
+          <div className="section-meta"><span>{t.sections.work}</span><span>{copy.selected}</span></div>
           <h2 className="section-title" data-split>{t.sections.workTitle}</h2>
           <div className="project-list">
             {(projects || []).map((project, index) => {
@@ -156,7 +162,7 @@ export default function Home({ content, posts = [] }) {
                 <a key={project.id || project.title} className="project-item" href={project.href || "#"} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} data-reveal data-hover>
                   <span className="project-media"><ProjectImage project={project} index={index} /></span>
                   <span className="project-info">
-                    <span className="project-number">{String(index + 1).padStart(2, "0")} / {project.year}</span>
+                    <span className="project-number">{project.year}</span>
                     <strong>{project.title}</strong>
                     <span className="project-desc">{project.description}</span>
                     <span className="project-tags">{(project.tags || []).join(" / ")}</span>
@@ -171,14 +177,13 @@ export default function Home({ content, posts = [] }) {
 
       <section id="experience" className="section experience">
         <div className="container">
-          <div className="section-meta"><span>{t.sections.experience}</span><span>05 / {copy.timeline}</span></div>
+          <div className="section-meta"><span>{t.sections.experience}</span><span>{copy.timeline}</span></div>
           <h2 className="section-title" data-split>{t.sections.experienceTitle}</h2>
           <ol className="timeline">
-            {(experience || []).map((item, index) => (
+            {(experience || []).map((item) => (
               <li className="timeline-item" key={`${item.role}-${item.company}`} data-reveal>
-                <span className="timeline-index">{String(index + 1).padStart(2, "0")}</span>
                 <span className="timeline-period">{item.period}</span>
-                <div className="timeline-body"><h3>{item.role}</h3><span className="timeline-company">{item.company}</span><p>{item.description}</p></div>
+                <div className="timeline-body"><div><h3>{item.role}</h3><span className="timeline-company">{item.company}</span></div><p>{item.description}</p></div>
               </li>
             ))}
           </ol>
@@ -187,7 +192,7 @@ export default function Home({ content, posts = [] }) {
 
       <section id="journal" className="section home-journal">
         <div className="container">
-          <div className="section-meta"><span>{t.blog.label}</span><span>06 / {copy.notes}</span></div>
+          <div className="section-meta"><span>{t.blog.label}</span><span>{copy.notes}</span></div>
           <div className="home-journal-heading">
             <h2 className="section-title" data-split>{t.blog.title}</h2>
             <p data-reveal>{copy.journalIntro}</p>
@@ -204,7 +209,7 @@ export default function Home({ content, posts = [] }) {
                 data-hover
               >
                 <span className="home-journal-meta">
-                  <span>01 / {formatDate(featuredPost.published_at || featuredPost.created_at, locale)}</span>
+                  <span>{formatDate(featuredPost.published_at || featuredPost.created_at, locale)}</span>
                   <span>{readingTime(featuredPost, locale)}</span>
                 </span>
                 <strong className="home-journal-title">{featuredPost.title}</strong>
@@ -215,7 +220,7 @@ export default function Home({ content, posts = [] }) {
               </Link>
 
               <div className="home-journal-side">
-                {secondaryPosts.map((post, index) => (
+                {secondaryPosts.map((post) => (
                   <Link
                     key={post.id || post.slug}
                     to={`/blog/${post.slug}`}
@@ -226,7 +231,7 @@ export default function Home({ content, posts = [] }) {
                     data-hover
                   >
                     <span className="home-journal-meta">
-                      <span>{String(index + 2).padStart(2, "0")} / {formatDate(post.published_at || post.created_at, locale)}</span>
+                      <span>{formatDate(post.published_at || post.created_at, locale)}</span>
                       <span>{readingTime(post, locale)}</span>
                     </span>
                     <strong className="home-journal-item-title">{post.title}</strong>
@@ -239,17 +244,17 @@ export default function Home({ content, posts = [] }) {
               </div>
             </div>
           ) : (
-            <div className="home-journal-empty" data-reveal><span>00</span><p>{t.blog.empty}</p><Link to="/blog" data-hover>{copy.allWriting} ↗</Link></div>
+            <div className="home-journal-empty" data-reveal><p>{t.blog.empty}</p><Link to="/blog" data-hover>{copy.allWriting} ↗</Link></div>
           )}
         </div>
       </section>
 
       <section id="contact" className="contact">
         <div className="container">
-          <div className="section-meta"><span>{t.sections.contact}</span><span>07 / {copy.start}</span></div>
+          <div className="section-meta"><span>{t.sections.contact}</span><span>{copy.start}</span></div>
           <h2 className="contact-title" data-split>{t.sections.contactTitle}</h2>
           <a className="contact-email" href={`mailto:${profile?.email || ""}`} data-hover><span>{profile?.email}</span><span>↗</span></a>
-          <div className="contact-socials">{(profile?.socials || []).map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" data-hover>{social.label}<span>↗</span></a>)}</div>
+          <div className="contact-socials">{socials.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noreferrer" data-hover>{social.label}<span>↗</span></a>)}</div>
         </div>
       </section>
     </main>

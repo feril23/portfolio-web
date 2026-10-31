@@ -65,6 +65,21 @@ export function useAnimations(scope, routeKey) {
             }, "-=0.46")
             .from(".hero-bottom", { y: 22, opacity: 0, duration: 0.78 }, "-=0.48")
 
+          // The character sketches itself line by line, then takes on colour.
+          const figure = document.querySelector(".hero-figure")
+          if (figure && getComputedStyle(figure).display !== "none") {
+            const strokes = gsap.utils.toArray("[data-draw]", figure)
+            strokes.forEach((stroke) => {
+              const length = Math.ceil(stroke.getTotalLength())
+              gsap.set(stroke, { strokeDasharray: length, strokeDashoffset: length })
+            })
+            gsap.set("[data-fade]", { opacity: 0 })
+            figure.classList.add("is-ready")
+            gsap.timeline({ delay: 0.3 })
+              .to(strokes, { strokeDashoffset: 0, duration: 0.85, ease: "power2.inOut", stagger: 0.075 })
+              .to("[data-fade]", { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.45")
+          }
+
           // The hero gently recedes to hand attention to the next section.
           gsap.to(".hero-copy", {
             yPercent: -7,
@@ -300,6 +315,21 @@ export function useAnimations(scope, routeKey) {
 
         // Pointer interactions are local, subtle, and never required.
         if (finePointer) {
+          // The character's eyes follow the pointer around the page.
+          const pupils = gsap.utils.toArray(".fig-pupil")
+          if (pupils.length) {
+            const xTo = pupils.map((pupil) => gsap.quickTo(pupil, "x", { duration: 0.5, ease: "power3" }))
+            const yTo = pupils.map((pupil) => gsap.quickTo(pupil, "y", { duration: 0.5, ease: "power3" }))
+            const look = (event) => {
+              const rect = pupils[0].ownerSVGElement.getBoundingClientRect()
+              const angle = Math.atan2(event.clientY - (rect.top + rect.height * 0.4), event.clientX - (rect.left + rect.width * 0.5))
+              xTo.forEach((to) => to(Math.cos(angle) * 3.5))
+              yTo.forEach((to) => to(Math.sin(angle) * 3))
+            }
+            window.addEventListener("pointermove", look, { passive: true })
+            listeners.push(() => window.removeEventListener("pointermove", look))
+          }
+
           gsap.utils.toArray(".text-link, .contact-email, .contact-socials a").forEach((element) => {
             const xTo = gsap.quickTo(element, "x", { duration: 0.45, ease: "power3" })
             const yTo = gsap.quickTo(element, "y", { duration: 0.45, ease: "power3" })
