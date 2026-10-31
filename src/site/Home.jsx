@@ -1,6 +1,7 @@
 "use client"
 import { useUI, useLocale } from "../i18n/context.jsx"
 import { Link } from "../lib/router.jsx"
+import { scrollToElement } from "../lib/scroll.js"
 import HeroFigure from "./HeroFigure.jsx"
 
 function formatDate(value, locale) {
@@ -74,7 +75,7 @@ export default function Home({ content, posts = [] }) {
           <div className="hero-bottom" data-enter>
             <p className="hero-intro">{about?.paragraphs?.[0]}</p>
             <div className="hero-actions">
-              <a href="#work" className="text-link text-link--primary" data-hover onClick={(event) => { event.preventDefault(); document.getElementById("work")?.scrollIntoView({ behavior: "smooth" }) }}>{t.hero.viewWork}<span>↓</span></a>
+              <a href="#work" className="text-link text-link--primary" data-hover onClick={(event) => { event.preventDefault(); scrollToElement(document.getElementById("work")) }}>{t.hero.viewWork}<span>↓</span></a>
               <a href={`mailto:${profile?.email || ""}`} className="text-link" data-hover>{t.hero.getInTouch}<span>↗</span></a>
             </div>
           </div>

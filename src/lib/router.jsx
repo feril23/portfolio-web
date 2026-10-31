@@ -8,12 +8,24 @@ import { getUI } from "../i18n/ui.js"
 import { startSharedTextTransition } from "./sharedTextTransition.js"
 
 let _navigate = null
+let _prefetch = null
 let _curtain = null
 let _localeResolver = null
 let _locale = defaultLocale
 
 export function bindNavigate(fn) {
   _navigate = fn
+}
+
+export function bindPrefetch(fn) {
+  _prefetch = fn
+}
+
+// Load a route ahead of time so the transition never waits on the server.
+export function prefetchRoute(to) {
+  try {
+    _prefetch?.(withLocale(to))
+  } catch {}
 }
 
 export function registerCurtain(api) {
@@ -137,7 +149,7 @@ export function Link({ to, children, onClick, transitionLabel, sharedTitle, ...r
     navigate(to, transitionLabel != null ? { label: transitionLabel } : undefined)
   }
   return (
-    <a href={href} onClick={handle} {...rest}>
+    <a href={href} onClick={handle} onPointerEnter={() => prefetchRoute(to)} onFocus={() => prefetchRoute(to)} {...rest}>
       {children}
     </a>
   )

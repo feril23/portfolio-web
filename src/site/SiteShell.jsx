@@ -6,7 +6,7 @@ import { useSiteContent } from "../lib/useSiteData.js"
 import { Nav, Footer, BackToTop } from "./Chrome.jsx"
 import { Curtain } from "../lib/Curtain.jsx"
 import { LocaleProvider } from "../i18n/context.jsx"
-import { setActiveLocale } from "../lib/router.jsx"
+import { prefetchRoute, setActiveLocale } from "../lib/router.jsx"
 import { initializeMotionPreference, MOTION_EVENT } from "../lib/motionPreference.js"
 
 // Shared shell for every public page. Stays mounted across client navigations
@@ -35,6 +35,15 @@ export default function SiteShell({ locale, ui, children }) {
   useEffect(() => {
     setActiveLocale(locale)
     if (typeof document !== "undefined") document.documentElement.lang = locale
+  }, [locale])
+
+  // The two main routes are ready before anyone taps them, on touch too.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      prefetchRoute("/")
+      prefetchRoute("/blog")
+    }, 1500)
+    return () => window.clearTimeout(timer)
   }, [locale])
 
   const content = useSiteContent(locale)

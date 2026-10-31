@@ -30,7 +30,7 @@ const MOTION_SCRIPT = `(function(){try{var m=localStorage.getItem("portfolio-mot
 // primary multi-language signal for crawlers.
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="id" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

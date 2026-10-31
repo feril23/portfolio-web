@@ -13,6 +13,7 @@ import { useUI, useLocale } from "../i18n/context.jsx"
 import { locales } from "../i18n/config.js"
 import { getUI } from "../i18n/ui.js"
 import { isMotionReduced, setMotionEnabled } from "../lib/motionPreference.js"
+import { scrollToElement } from "../lib/scroll.js"
 
 /* ----------------------------- Custom cursor ---------------------------- */
 export function Cursor() {
@@ -273,6 +274,29 @@ function LanguageDropdown() {
   )
 }
 
+/* ------------------------- Language switch (menu) ------------------------ */
+function LanguageSwitch() {
+  const active = useLocale()
+  return (
+    <div className="nav-menu-lang" role="group" aria-labelledby="menu-language-label">
+      <span className="nav-menu-lang-label" id="menu-language-label">
+        {active === "id" ? "Bahasa" : "Language"}
+      </span>
+      {locales.map((lc) => (
+        <button
+          key={lc}
+          type="button"
+          aria-pressed={lc === active}
+          onClick={() => { if (lc !== active) switchLocale(lc) }}
+          data-hover
+        >
+          {getUI(lc).lang.name}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 /* --------------------------------- Nav ---------------------------------- */
 export function Nav({ profile }) {
   const t = useUI()
@@ -288,12 +312,26 @@ export function Nav({ profile }) {
     { id: "contact", label: t.nav.contact },
   ]
 
+  // While the menu is open the page behind it must stay still, otherwise the
+  // header scrolls away and takes the close button with it.
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : ""
+    if (!open) return
+    document.body.style.overflow = "hidden"
+    window.__lenis?.stop?.()
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false)
+    }
+    document.addEventListener("keydown", onKey)
     return () => {
       document.body.style.overflow = ""
+      window.__lenis?.start?.()
+      document.removeEventListener("keydown", onKey)
     }
   }, [open])
+
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
 
   useEffect(() => {
     const logical = stripLocale(pathname)
@@ -339,25 +377,19 @@ export function Nav({ profile }) {
   // there first and then poll for the target element.
   const goToSection = (id, transitionLabel) => {
     setOpen(false)
-    const onHome = stripLocale(currentPath()) === "/"
-    const scroll = () => {
-      let tries = 0
-      const tick = () => {
-        const el = document.getElementById(id)
-        if (el) {
-          el.scrollIntoView({ behavior: isMotionReduced() ? "auto" : "smooth" })
-        } else if (tries++ < 45) {
-          setTimeout(tick, 60)
-        }
-      }
-      tick()
+    if (stripLocale(currentPath()) === "/") {
+      requestAnimationFrame(() => scrollToElement(document.getElementById(id)))
+      return
     }
-    if (onHome) {
-      scroll()
-    } else {
-      navigate("/", { label: transitionLabel })
-      setTimeout(scroll, 650)
+    // Land on the section while the transition still covers the page.
+    navigate("/", { label: transitionLabel })
+    let tries = 0
+    const tick = () => {
+      const el = stripLocale(currentPath()) === "/" ? document.getElementById(id) : null
+      if (el) scrollToElement(el, { immediate: true })
+      else if (tries++ < 80) setTimeout(tick, 60)
     }
+    tick()
   }
 
   return (
@@ -392,12 +424,6 @@ export function Nav({ profile }) {
           </nav>
 
           <div className="nav-right">
-            {profile?.availability && (
-              <span className="nav-status">
-                <span className="nav-status-dot" />
-                {profile.availability}
-              </span>
-            )}
             <LanguageDropdown />
             <AccessibilityMenu />
             <ThemeToggle />
@@ -415,7 +441,7 @@ export function Nav({ profile }) {
         </div>
       </header>
 
-      <div className={"nav-menu" + (open ? " is-open" : "")}>
+      <div className={"nav-menu" + (open ? " is-open" : "")} data-lenis-prevent>
         <div className="nav-menu-inner">
           <nav className="nav-menu-links">
             {NAV_LINKS.map((l, i) =>
@@ -450,7 +476,7 @@ export function Nav({ profile }) {
             )}
           </nav>
           <div className="nav-menu-foot">
-            <LanguageDropdown />
+            <LanguageSwitch />
             {profile?.email && (
               <a className="nav-menu-email" href={`mailto:${profile.email}`} data-hover>
                 {profile.email}

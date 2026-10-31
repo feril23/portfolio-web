@@ -21,7 +21,10 @@ export function useAnimations(scope, routeKey) {
       const SplitType = splitTypeModule.default
       gsap.registerPlugin(ScrollTrigger)
 
+      document.documentElement.dataset.anim = "ready"
       const reduced = isMotionReduced()
+      // Under a route transition, entrances wait until the sheet starts lifting.
+      const enterDelay = document.querySelector(".editorial-transition") ? 0.45 : 0
       const finePointer = window.matchMedia("(pointer: fine)").matches
       const listeners = []
       const splits = []
@@ -52,7 +55,7 @@ export function useAnimations(scope, routeKey) {
 
         // Deliberate first impression: metadata, headline, then actions.
         if (hero) {
-          const intro = gsap.timeline({ defaults: { ease: "power4.out" } })
+          const intro = gsap.timeline({ delay: enterDelay, defaults: { ease: "power4.out" } })
           intro
             .from(".hero-top > *", { y: 14, opacity: 0, duration: 0.65, stagger: 0.07 })
             .from(".hero-kicker", { y: 18, opacity: 0, duration: 0.7 }, "-=0.35")
@@ -75,7 +78,7 @@ export function useAnimations(scope, routeKey) {
             })
             gsap.set("[data-fade]", { opacity: 0 })
             figure.classList.add("is-ready")
-            gsap.timeline({ delay: 0.3 })
+            gsap.timeline({ delay: enterDelay + 0.3 })
               .to(strokes, { strokeDashoffset: 0, duration: 0.85, ease: "power2.inOut", stagger: 0.075 })
               .to("[data-fade]", { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.08 }, "-=0.45")
           }
@@ -92,14 +95,18 @@ export function useAnimations(scope, routeKey) {
         // Reading/scroll feedback integrated into the navigation rule.
         if (nav) {
           const setProgress = gsap.quickSetter(nav, "--scroll-progress")
+          let navHidden = false
           ScrollTrigger.create({
             start: 0,
             end: "max",
             onUpdate(self) {
               setProgress(self.progress)
+              const hide = self.direction === 1 && self.scroll() > 220
+              if (hide === navHidden) return
+              navHidden = hide
               gsap.to(nav, {
-                yPercent: self.direction === 1 && self.scroll() > 220 ? -105 : 0,
-                duration: 0.38,
+                yPercent: hide ? -105 : 0,
+                duration: 0.42,
                 ease: "power3.out",
                 overwrite: true,
               })
@@ -150,6 +157,8 @@ export function useAnimations(scope, routeKey) {
             ease: "power4.out",
             stagger: 0.028,
             scrollTrigger: { trigger: element, start: "top 86%", once: true },
+            // Hand the heading back to normal text so it rewraps on resize.
+            onComplete: () => split.revert(),
           })
         })
 
@@ -310,6 +319,7 @@ export function useAnimations(scope, routeKey) {
             duration: 0.78,
             ease: "power3.out",
             stagger: 0.07,
+            delay: enterDelay,
           })
         }
 
@@ -360,7 +370,9 @@ export function useAnimations(scope, routeKey) {
         if (lenis) lenis.destroy()
         if (window.__lenis === lenis) window.__lenis = null
       }
-    })().catch(() => {})
+    })().catch(() => {
+      document.documentElement.dataset.anim = "ready"
+    })
 
     return () => {
       cancelled = true

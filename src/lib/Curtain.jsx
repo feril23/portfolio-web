@@ -28,7 +28,7 @@ function buildFold(label, direction) {
   const marker = document.createElement("span")
   marker.className = "editorial-transition-marker"
   const identity = document.createElement("span")
-  identity.textContent = `DF / ${new Date().getFullYear()}`
+  identity.textContent = `FF / ${new Date().getFullYear()}`
   meta.append(marker, identity)
 
   const labelMask = document.createElement("div")
@@ -96,8 +96,8 @@ function revealFold(overlay) {
 
   tl.to(overlay.destination, {
     yPercent: labelExit,
-    duration: 0.27,
-    ease: "power3.in",
+    duration: 0.3,
+    ease: "power2.in",
   }, 0)
   tl.to(overlay.meta, {
     autoAlpha: 0,
@@ -107,9 +107,9 @@ function revealFold(overlay) {
   }, 0)
   tl.to(overlay.sheet, {
     ...sheetExit,
-    duration: 0.58,
-    ease: "power4.inOut",
-  }, 0.08)
+    duration: 0.62,
+    ease: "power3.inOut",
+  }, 0.1)
 
   if (destinationMain) {
     tl.fromTo(destinationMain, {
@@ -119,9 +119,9 @@ function revealFold(overlay) {
       x: 0,
       y: 0,
       opacity: 1,
-      duration: 0.5,
+      duration: 0.6,
       ease: "power3.out",
-    }, 0.22)
+    }, 0.26)
   }
 }
 
@@ -147,7 +147,7 @@ function coverWithFold(overlay, go) {
       const pending = overlay
       window.setTimeout(() => {
         if (!pending.revealed && foldState.overlay === pending) revealFold(pending)
-      }, 1200)
+      }, 3000)
     },
   })
 
@@ -162,14 +162,14 @@ function coverWithFold(overlay, go) {
   tl.to(overlay.sheet, {
     xPercent: 0,
     yPercent: 0,
-    duration: 0.52,
-    ease: "power4.inOut",
+    duration: 0.56,
+    ease: "power3.inOut",
   }, 0)
   tl.to(overlay.destination, {
     yPercent: 0,
-    duration: 0.36,
-    ease: "power4.out",
-  }, 0.16)
+    duration: 0.44,
+    ease: "power3.out",
+  }, 0.2)
   tl.to(overlay.meta, {
     autoAlpha: 1,
     y: 0,
