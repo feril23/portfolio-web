@@ -1,0 +1,15 @@
+# Dependencies & build output
+node_modules/
+.next/
+out/
+
+# Secrets: keep .env.example only
+.env
+.env.*
+!.env.example
+
+# Local / OS
+*.lnk
+*.log
+.DS_Store
+Thumbs.db
