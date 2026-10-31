@@ -66,7 +66,7 @@
 .project-list { border-top: 1px solid var(--line-strong); }
 .project-item { display: grid; grid-template-columns: minmax(230px, 34%) 1fr 28px; gap: clamp(26px, 5vw, 72px); align-items: start; padding: clamp(32px, 4.5vw, 60px) 0; border-bottom: 1px solid var(--line); transition: color .25s ease; }
 .project-item:only-child { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 28px; }
-.project-media { display: block; overflow: hidden; aspect-ratio: 16 / 10; background: var(--bg); will-change: clip-path; }
+.project-media { display: block; overflow: hidden; aspect-ratio: 40 / 21; background: var(--bg); will-change: clip-path; }
 .project-image { width: 100%; height: 100%; object-fit: cover; filter: saturate(.86); transition: transform .7s cubic-bezier(.16,1,.3,1), filter .3s ease; }
 .project-item:hover .project-image { transform: scale(1.025); filter: saturate(1); }
 .project-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 18px; background: var(--text); color: var(--bg); }
