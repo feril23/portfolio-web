@@ -13,3 +13,6 @@ out/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local database backups
+supabase/backups/
