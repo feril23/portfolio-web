@@ -3,6 +3,7 @@ import { useUI, useLocale } from "../i18n/context.jsx"
 import { Link } from "../lib/router.jsx"
 import { scrollToElement } from "../lib/scroll.js"
 import HeroFigure from "./HeroFigure.jsx"
+import Certifications from "./Certifications.jsx"
 
 function formatDate(value, locale) {
   if (!value) return ""
@@ -52,7 +53,7 @@ export default function Home({ content, posts = [] }) {
   const copy = locale === "id"
     ? { intro: "Membangun aplikasi web utuh, dari antarmuka sampai server.", profile: "Profil", selected: "Proyek", capabilities: "Teknologi", timeline: "Linimasa", notes: "Catatan terbaru", journalIntro: "Catatan tentang kode, proyek, dan proses di balik aplikasi yang saya bangun.", allWriting: "Lihat semua tulisan", start: "Mulai percakapan", index: "Fokus" }
     : { intro: "Building complete web apps, from interface to server.", profile: "Profile", selected: "Projects", capabilities: "Tech stack", timeline: "Timeline", notes: "Latest notes", journalIntro: "Notes on code, projects, and the process behind the apps I build.", allWriting: "View all writing", start: "Start a conversation", index: "Focus" }
-  const { profile, keywords, about, skills, services, projects, experience } = content
+  const { profile, keywords, about, skills, services, projects, experience, certifications } = content
   const [featuredPost, ...secondaryPosts] = posts
   // Links still pointing at a placeholder profile stay hidden until they're real.
   const socials = (profile?.socials || []).filter((social) => social.href && !/placeholder/i.test(social.href))
@@ -190,6 +191,8 @@ export default function Home({ content, posts = [] }) {
           </ol>
         </div>
       </section>
+
+      <Certifications items={certifications} />
 
       <section id="journal" className="section home-journal">
         <div className="container">

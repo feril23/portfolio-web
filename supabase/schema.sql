@@ -88,6 +88,25 @@ create table if not exists public.experience (
   sort         int default 0
 );
 
+-- ---------- Certifications ------------------------------------------
+create table if not exists public.certifications (
+  id               uuid primary key default gen_random_uuid(),
+  locale           text not null default 'id',
+  translation_key  uuid not null default gen_random_uuid(),
+  title            text not null default '',
+  issuer           text default '',
+  description      text default '',
+  issued_at        date,
+  expires_at       date,
+  credential_id    text default '',
+  credential_url   text default '',
+  image_url        text,
+  featured         boolean not null default false,
+  sort             int default 0,
+  published        boolean not null default true,
+  created_at       timestamptz default now()
+);
+
 -- ---------- Blog posts (per locale) ----------------------------------
 create table if not exists public.posts (
   id            uuid primary key default gen_random_uuid(),
@@ -182,6 +201,7 @@ end $$;
 -- Posts slugs are unique per language (so /id/blog/x and /en/blog/x can pair).
 alter table public.posts drop constraint if exists posts_slug_key;
 create unique index if not exists posts_locale_slug_key on public.posts (locale, slug);
+create unique index if not exists certifications_translation_pair_key on public.certifications (translation_key, locale);
 
 -- Helpful lookup indexes.
 create index if not exists profile_locale_idx    on public.profile (locale);
@@ -190,6 +210,7 @@ create index if not exists skills_locale_idx     on public.skills (locale);
 create index if not exists services_locale_idx   on public.services (locale);
 create index if not exists projects_locale_idx   on public.projects (locale);
 create index if not exists experience_locale_idx on public.experience (locale);
+create index if not exists certifications_locale_idx on public.certifications (locale);
 create index if not exists posts_locale_idx       on public.posts (locale);
 
 -- =====================================================================
@@ -210,6 +231,7 @@ alter table public.skills       enable row level security;
 alter table public.services     enable row level security;
 alter table public.projects     enable row level security;
 alter table public.experience   enable row level security;
+alter table public.certifications enable row level security;
 alter table public.posts        enable row level security;
 alter table public.translations enable row level security;
 
@@ -234,6 +256,13 @@ drop policy if exists "auth write services" on public.services;
 create policy "public read services" on public.services
   for select to anon using (published = true);
 create policy "auth write services" on public.services
+  for all to authenticated using (true) with check (true);
+
+drop policy if exists "public read certifications" on public.certifications;
+drop policy if exists "auth write certifications" on public.certifications;
+create policy "public read certifications" on public.certifications
+  for select to anon using (published = true);
+create policy "auth write certifications" on public.certifications
   for all to authenticated using (true) with check (true);
 
 -- AI plans are private to the authenticated admin who created them.

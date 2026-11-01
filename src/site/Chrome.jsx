@@ -344,7 +344,7 @@ export function Nav({ profile }) {
       return
     }
 
-    const ids = ["about", "services", "work", "experience", "journal", "contact"]
+    const ids = ["about", "services", "work", "experience", "certifications", "journal", "contact"]
     let raf = 0
     const update = () => {
       raf = 0

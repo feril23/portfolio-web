@@ -195,6 +195,15 @@ export async function getExperience(locale = defaultLocale) {
   return data
 }
 
+export async function getCertifications({ publishedOnly = false, locale = defaultLocale } = {}) {
+  if (DEMO) return []
+  let query = supabase.from("certifications").select("*").eq("locale", locale).order("sort")
+  if (publishedOnly) query = query.eq("published", true)
+  const { data, error } = await query
+  if (error) throw error
+  return data
+}
+
 export async function getPosts({ publishedOnly = false, locale = defaultLocale } = {}) {
   if (DEMO) {
     const posts = seedData(locale).posts
@@ -277,13 +286,14 @@ export async function getUIStrings(locale = defaultLocale) {
 
 // Bundle everything the public site needs in one call.
 export async function getSiteContent(locale = defaultLocale) {
-  const [profile, socials, skills, services, projects, experience] = await Promise.all([
+  const [profile, socials, skills, services, projects, experience, certifications] = await Promise.all([
     getProfile(locale),
     getSocials(locale),
     getSkills(locale),
     getServices({ publishedOnly: true, locale }).catch(() => []),
     getProjects(locale),
     getExperience(locale),
+    getCertifications({ publishedOnly: true, locale }).catch(() => []),
   ])
   return {
     profile: {
@@ -299,6 +309,7 @@ export async function getSiteContent(locale = defaultLocale) {
     services,
     projects,
     experience,
+    certifications,
   }
 }
 
@@ -355,6 +366,7 @@ function makeCrud(table) {
 
 export const projectsApi = makeCrud("projects")
 export const experienceApi = makeCrud("experience")
+export const certificationsApi = makeCrud("certifications")
 export const skillsApi = makeCrud("skills")
 export const servicesApi = makeCrud("services")
 export const socialsApi = makeCrud("socials")

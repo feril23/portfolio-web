@@ -17,6 +17,7 @@ const NAV = [
   { key: "services", label: "Services", icon: Icons.services, to: "/admin/services" },
   { key: "work", label: "Work", icon: Icons.work, to: "/admin/work" },
   { key: "experience", label: "Experience", icon: Icons.briefcase, to: "/admin/experience" },
+  { key: "certifications", label: "Certifications", icon: Icons.award, to: "/admin/certifications" },
   { key: "posts", label: "Blog", icon: Icons.post, to: "/admin/posts" },
   { key: "interface", label: "Interface", icon: Icons.globe, to: "/admin/interface" },
   { key: "profile", label: "Profile", icon: Icons.user, to: "/admin/profile" },

@@ -38,6 +38,15 @@ export const dict = {
       scopeLabel: "Cakupan",
       empty: "Daftar layanan akan segera hadir.",
     },
+    certifications: {
+      label: "(Sertifikat)",
+      meta: "Kredensial",
+      title: "Sertifikat & penghargaan",
+      view: "Lihat sertifikat",
+      verify: "Verifikasi",
+      validUntil: "Berlaku hingga",
+      close: "Tutup",
+    },
     blog: {
       label: "(Jurnal)",
       title: "Tulisan & catatan",
@@ -107,6 +116,15 @@ export const dict = {
       cta: "Start a conversation",
       scopeLabel: "Scope",
       empty: "Service details are coming soon.",
+    },
+    certifications: {
+      label: "(Certifications)",
+      meta: "Credentials",
+      title: "Certifications & awards",
+      view: "View certificate",
+      verify: "Verify",
+      validUntil: "Valid until",
+      close: "Close",
     },
     blog: {
       label: "(Journal)",
