@@ -150,3 +150,7 @@ Rollback snapshots are private and protected by Supabase row-level security. Re-
 ### Additive translation safety
 
 Translation runs are additive. Existing source-language rows never change locale and are never reused as target-language rows. Missing translations are created with a new primary id and share a private `translation_key` with the source row. Existing rows are updated without a `locale` field in the update payload, cross-locale deletes are blocked, and translation prompts automatically load both language datasets.
+
+## License
+
+Copyright (c) 2026 Feril Ferdian. All rights reserved. The code is public to read, but it may not be reused without permission. See [LICENSE](LICENSE).
